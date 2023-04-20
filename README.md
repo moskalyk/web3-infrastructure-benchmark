@@ -33,5 +33,8 @@ NFT Metadata
 │ NFTPort                      │ 422                          │
 └──────────────────────────────┴──────────────────────────────┘
 ```
+## token balance benchmark
 ![](./benchmark.png)
+
+## metadata benchmark
 ![](./benchmark_nft.png)
