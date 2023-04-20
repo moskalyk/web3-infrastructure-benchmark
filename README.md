@@ -1,4 +1,7 @@
 # web3-infrastructure-benchmark
+
+![](./ships.png)
+
 ```
 ┌──────────────────────────────┬──────────────────────────────┐
 │ API                          │ Time (ms)                    │
