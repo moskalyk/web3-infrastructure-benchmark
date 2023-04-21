@@ -1,7 +1,5 @@
-import { config as loadEnv } from 'dotenv';
 import { start, end } from '../utils'
 import { SDK, Auth, TEMPLATES, Metadata } from '@infura/sdk';
-loadEnv();
 
 console.log(process.env.INFURA_API_KEY)
 // Create Auth object
@@ -20,12 +18,26 @@ const runner = async () => {
     // call api
     const myNFTs = await sdk.api.getNFTs({
       publicAddress: process.env!.WALLET_PUBLIC_ADDRESS!,
-      includeMetadata: true
+      // includeMetadata: true
     });
     // console.log('My NFTs: \n', myNFTs);
     return end()
 }
 
+const nftRunner = async () => {
+  start()
+  // const tokenBalances = await indexer.getTokenBalances({
+  //     accountAddress: accountAddress,
+  //     includeMetadata: true
+  // })
+  const myNFTs = await sdk.api.getNFTs({
+    publicAddress: process.env!.WALLET_PUBLIC_ADDRESS!,
+    includeMetadata: true
+  });
+  return end()
+}
+
 export {
-  runner
+  runner,
+  nftRunner
 }

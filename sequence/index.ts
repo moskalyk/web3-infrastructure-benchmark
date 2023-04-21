@@ -7,7 +7,7 @@ import { SequenceIndexerClient } from '@0xsequence/indexer'
 const indexer = new SequenceIndexerClient('https://polygon-indexer.sequence.app')
 
 // try any account address you'd like :)
-const accountAddress = '0xBAbebe9FE973a5735D486BF6D31e9a027248024e'
+const accountAddress = process.env!.WALLET_PUBLIC_ADDRESS!
 
 const runner = async () => {
     console.log('running sequence...')
@@ -23,6 +23,16 @@ const runner = async () => {
     return end()
 }
 
+const nftRunner = async () => {
+    start()
+    const tokenBalances = await indexer.getTokenBalances({
+        accountAddress: accountAddress,
+        includeMetadata: true
+    })
+    return end()
+}
+
 export {
-    runner
+    runner,
+    nftRunner
 }

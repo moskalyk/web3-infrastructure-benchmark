@@ -21,6 +21,16 @@ const runner = async () => {
     return end()
 }
 
+const nftRunner = async () => {
+  start()
+  // The token address we want to query for metadata:
+  const metadata = await alchemy.core.getTokenMetadata(
+    "0x631998e91476DA5B870D741192fc5Cbc55F5a52E"
+  );
+  return end()
+}
+
 export {
-  runner
+  runner,
+  nftRunner
 }
