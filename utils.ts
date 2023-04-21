@@ -10,7 +10,12 @@ const end = () => {
   return Math.round(endTime - startTime)
 }
 
+const wait = async (ms: number) => {
+  await new Promise(resolve => setTimeout(resolve, ms));
+}
+
 export {
     start,
-    end
+    end,
+    wait
 }

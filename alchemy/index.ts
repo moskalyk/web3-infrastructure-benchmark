@@ -1,24 +1,40 @@
-import { start, end } from '../utils'
-
+import { wait, end, start } from '../utils'
 import { Alchemy, Network } from "alchemy-sdk";
 
 const settings = {
   apiKey: process.env.ALCHEMY_API_KEY, // Replace with your Alchemy API Key.
   network: Network.MATIC_MAINNET, // Replace with your network.
 };
+
 const alchemy = new Alchemy(settings);
 
-const runner = async () => {
+const runner = async (config: any) => {
+    const times: any = []
+    const ADDRESSES = process.env!.ADDRESSES?.split(',')!
     const ownerAddr = process.env!.WALLET_PUBLIC_ADDRESS!
 
-    start()
-    // call api
-    // The wallet address / token we want to query for:
-    const balances = await alchemy.core.getTokenBalances(ownerAddr, [
-      "0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174",
-    ]);
+    for (let j = 0; j < ADDRESSES.length; j++){
+      for(let i = 0; i < 10; i++){
+        if(config.loadTest == false) await wait(1000)
 
-    return end()
+        start()
+        // call api
+        // The wallet address / token we want to query for:
+        const balances = await alchemy.core.getTokenBalances(ownerAddr, [
+          ADDRESSES[j],
+        ]);
+
+        times.push(end())
+      }
+    }
+
+    const sum = times.reduce((accumulator: any, currentValue: any) => {
+      return accumulator + currentValue;
+    });
+    
+    const average = sum / times.length;
+
+  return average
 }
 
 const nftRunner = async () => {

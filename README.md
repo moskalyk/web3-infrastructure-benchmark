@@ -2,23 +2,39 @@
 
 ![](./ships.png)
 
+## methodology
+
+### token balance
+- 10 differet wallet addresses
+- 10 requests per wallet address
+- >=1 second between requests
+
+Result
 ```
 Token Balance
 ┌──────────────────────────────┬──────────────────────────────┐
 │ API                          │ Time (ms)                    │
 ├──────────────────────────────┼──────────────────────────────┤
-│ Sequence Indexer             │ 242                          │
+│ Sequence Indexer             │ 132.62                       │
 ├──────────────────────────────┼──────────────────────────────┤
-│ Infura API                   │ 297                          │
+│ Infura API                   │ 916.79                       │
 ├──────────────────────────────┼──────────────────────────────┤
-│ Covalent Balances            │ 237                          │
+│ Covalent Balances            │ 216.03                       │
 ├──────────────────────────────┼──────────────────────────────┤
-│ Alchemy                      │ 180                          │
+│ Alchemy                      │ 189.56                       │
 ├──────────────────────────────┼──────────────────────────────┤
-│ NFTPort                      │ 488                          │
+│ NFTPort                      │ 2006.46                      │
 └──────────────────────────────┴──────────────────────────────┘
+```
 
-NFT Metadata
+## token balance benchmark
+![](./benchmark_averages.png)
+
+### NFT metadata
+TBC
+
+```
+NFT Metadata (one shot requests)
 ┌──────────────────────────────┬──────────────────────────────┐
 │ API                          │ Time (ms)                    │
 ├──────────────────────────────┼──────────────────────────────┤
@@ -33,8 +49,7 @@ NFT Metadata
 │ NFTPort                      │ 422                          │
 └──────────────────────────────┴──────────────────────────────┘
 ```
-## token balance benchmark
-![](./benchmark.png)
+
 
 ## metadata benchmark
 ![](./benchmark_nft.png)
