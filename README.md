@@ -5,7 +5,7 @@
 ## methodology
 
 ### token balance
-- 10 differet wallet addresses
+- 10 different wallet addresses
 - 10 requests per wallet address
 - >=1 second between requests
 
