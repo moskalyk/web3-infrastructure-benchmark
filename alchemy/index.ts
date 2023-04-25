@@ -37,13 +37,36 @@ const runner = async (config: any) => {
   return average
 }
 
-const nftRunner = async () => {
-  start()
-  // The token address we want to query for metadata:
-  const metadata = await alchemy.core.getTokenMetadata(
-    "0x631998e91476DA5B870D741192fc5Cbc55F5a52E"
-  );
-  return end()
+const nftRunner = async (config: any) => {
+  const times: any = []
+  const ADDRESSES = process.env!.NFTS?.split(',')!
+
+  // call api
+  for (let j = 0; j < ADDRESSES.length; j++){
+      for(let i = 0; i < 10; i++){
+          if(config.loadTest == false) await wait(1000)
+          
+          try{    
+
+            start()
+            await alchemy.core.getTokenMetadata(ADDRESSES[j]);
+            
+            times.push(end())
+            console.log(`${i},${j}`)
+          } catch(e){
+              console.log(e)
+          }
+      }
+  }
+
+
+  const sum = times.reduce((accumulator: any, currentValue: any) => {
+      return accumulator + currentValue;
+    });
+    
+    const average = sum / times.length;
+
+  return average
 }
 
 export {

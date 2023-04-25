@@ -30,13 +30,13 @@ import {runner as nftPortRunner, nftRunner as nftPortNFTRunner } from './nftport
 
     try {
         const loadTest = false
-        balanceTable.push(
-               [balanceApis[0], `${await sequenceRunner({ loadTest: loadTest })}`]
-            ,  [balanceApis[1], `${await infuraRunner({ loadTest: loadTest })}`]
-            ,  [balanceApis[2], `${await covalentRunner({ loadTest: loadTest })}`]
-            ,  [balanceApis[3], `${await alchemyRunner({ loadTest: loadTest })}`]
-            ,  [balanceApis[4], `${await nftPortRunner({ loadTest: loadTest })}`]
-        );
+        // balanceTable.push(
+        //        [balanceApis[0], `${await sequenceRunner({ loadTest: loadTest })}`]
+        //     ,  [balanceApis[1], `${await infuraRunner({ loadTest: loadTest })}`]
+        //     ,  [balanceApis[2], `${await covalentRunner({ loadTest: loadTest })}`]
+        //     ,  [balanceApis[3], `${await alchemyRunner({ loadTest: loadTest })}`]
+        //     ,  [balanceApis[4], `${await nftPortRunner({ loadTest: loadTest })}`]
+        // );
 
         console.log(balanceTable.toString());
     }catch(e){
@@ -59,14 +59,18 @@ import {runner as nftPortRunner, nftRunner as nftPortNFTRunner } from './nftport
         'NFTPort' // https://docs.nftport.xyz/reference/retrieve-nft-details
     ]
 
-    // table is an Array, so you can `push`, `unshift`, `splice` and friends
-    nftTable.push(
-        // [nftApis[0], `${await sequenceNFTRunner()}`]
-    //   , [nftApis[1], `${await infuraNFTRunner()}`]
-    //   , [nftApis[2], `${await covalentNFTRunner()}`]
-    //   , [nftApis[3], `${await alchemyNFTRunner()}`]
-    //   , [nftApis[4], `${await nftPortNFTRunner()}`]
-    );
+    try {
+        const loadTest = false
+        nftTable.push(
+            // [nftApis[0], `${await sequenceNFTRunner({ loadTest: loadTest })}`]
+            [nftApis[1], `${await infuraNFTRunner({ loadTest: loadTest })}`]
+          , [nftApis[2], `${await covalentNFTRunner({ loadTest: loadTest })}`]
+          , [nftApis[3], `${await alchemyNFTRunner({ loadTest: loadTest })}`]
+          ,  [nftApis[4], `${await nftPortNFTRunner({ loadTest: loadTest })}`]
+        );
 
-    console.log(nftTable.toString())
+        console.log(nftTable.toString())
+    }catch(e){
+        console.log(e)
+    }
 })()

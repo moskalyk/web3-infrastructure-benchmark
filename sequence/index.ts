@@ -17,7 +17,7 @@ const runner = async (config: any) => {
     for (let j = 0; j < ADDRESSES.length; j++){
         for(let i = 0; i < 10; i++){
             if(config.loadTest == false) await wait(1000)
-            
+
             start()
             try{
                 // query Sequence Indexer for all token balances of the account on Polygon
@@ -41,13 +41,39 @@ const runner = async (config: any) => {
     return average
 }
 
-const nftRunner = async () => {
-    start()
-    const tokenBalances = await indexer.getTokenBalances({
-        accountAddress: accountAddress,
-        includeMetadata: true
-    })
-    return end()
+const nftRunner = async (config: any) => {
+    const times: any = []
+    const ADDRESSES = process.env!.NFTS?.split(',')!
+
+    // call api
+    for (let j = 0; j < ADDRESSES.length; j++){
+        for(let i = 0; i < 10; i++){
+            if(config.loadTest == false) await wait(1000)
+            
+            try{    
+                start()
+                // query Sequence Indexer for all token balances of the account on Polygon
+                await indexer.getTokenBalances({
+                    accountAddress: ADDRESSES[j],
+                    includeMetadata: true
+                })
+                // console.log('tokens in your account:', tokenBalances)
+                times.push(end())
+                console.log(`${i},${j}`)
+            } catch(e){
+                console.log(e)
+            }
+        }
+    }
+
+
+    const sum = times.reduce((accumulator: any, currentValue: any) => {
+        return accumulator + currentValue;
+      });
+      
+      const average = sum / times.length;
+ 
+    return average
 }
 
 export {

@@ -40,17 +40,38 @@ const runner = async (config: any) => {
 
 }
 
-const nftRunner = async () => {
-  start()
-  // const tokenBalances = await indexer.getTokenBalances({
-  //     accountAddress: accountAddress,
-  //     includeMetadata: true
-  // })
-  const myNFTs = await sdk.api.getNFTs({
-    publicAddress: process.env!.WALLET_PUBLIC_ADDRESS!,
-    includeMetadata: true
-  });
-  return end()
+
+const nftRunner = async (config: any) => {
+  const times: any = []
+  const ADDRESSES = process.env!.NFTS?.split(',')!
+
+  // call api
+  for (let j = 0; j < ADDRESSES.length; j++){
+      for(let i = 0; i < 10; i++){
+          if(config.loadTest == false) await wait(1000)
+          
+          try{    
+              start()
+              await sdk.api.getNFTs({
+                    publicAddress: ADDRESSES[j],
+                    includeMetadata: true
+              });
+              times.push(end())
+              console.log(`${i},${j}`)
+          } catch(e){
+              console.log(e)
+          }
+      }
+  }
+
+
+  const sum = times.reduce((accumulator: any, currentValue: any) => {
+      return accumulator + currentValue;
+    });
+    
+    const average = sum / times.length;
+
+  return average
 }
 
 export {

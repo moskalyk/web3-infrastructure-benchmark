@@ -31,14 +31,37 @@ const runner = async (config: any) => {
   return average
 }
 
-const nftRunner = async () => {
-  start()
-  let headers = new Headers();
-  headers.set('Authorization', 'Basic ' + new Buffer('cqt_rQFjvkvxXdm3DGtJTgt8WDmhhwxJ').toString('base64'));
-  
-  await fetch(`https://api.covalenthq.com/v1/polygon/nft/${`0x631998e91476DA5B870D741192fc5Cbc55F5a52E`}/${`0`}/`, {method: 'GET', headers: headers})
+const nftRunner = async (config: any) => {
+  const times: any = []
+  const ADDRESSES = process.env!.NFTS?.split(',')!
 
-  return end()
+  // call api
+  for (let j = 0; j < ADDRESSES.length; j++){
+      for(let i = 0; i < 10; i++){
+          if(config.loadTest == false) await wait(1000)
+          
+          try{    
+            let headers = new Headers();
+            headers.set('Authorization', 'Basic ' + new Buffer('cqt_rQFjvkvxXdm3DGtJTgt8WDmhhwxJ').toString('base64'));
+
+            start()
+            await fetch(`https://api.covalenthq.com/v1/polygon/nft/${ADDRESSES[j]}/${`0`}/`, {method: 'GET', headers: headers})
+            times.push(end())
+            console.log(`${i},${j}`)
+          } catch(e){
+              console.log(e)
+          }
+      }
+  }
+
+
+  const sum = times.reduce((accumulator: any, currentValue: any) => {
+      return accumulator + currentValue;
+    });
+    
+    const average = sum / times.length;
+
+  return average
 }
 
 export {
