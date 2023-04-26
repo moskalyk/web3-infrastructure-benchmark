@@ -3,12 +3,12 @@ import { config as loadEnv } from 'dotenv';
 loadEnv();
 
 import Table from 'cli-table';
-import {runner as sequenceRunner, nftRunner as sequenceNFTRunner } from './sequence/index'
-import {runner as infuraRunner, nftRunner as infuraNFTRunner } from './infura/index'
-import {runner as covalentRunner, nftRunner as covalentNFTRunner } from './covalent/index'
-import {runner as alchemyRunner, nftRunner as alchemyNFTRunner } from './alchemy/index'
-import {runner as nftPortRunner, nftRunner as nftPortNFTRunner } from './nftport/index'
-
+import { runner as sequenceRunner, nftRunner as sequenceNFTRunner } from './sequence/index'
+import { runner as infuraRunner, nftRunner as infuraNFTRunner } from './infura/index'
+import { runner as covalentRunner, nftRunner as covalentNFTRunner } from './covalent/index'
+import { runner as alchemyRunner, nftRunner as alchemyNFTRunner } from './alchemy/index'
+import { runner as nftPortRunner, nftRunner as nftPortNFTRunner } from './nftport/index'
+import { changeRunner } from './update/'
 
 (async () => {
     // instantiate
@@ -27,9 +27,11 @@ import {runner as nftPortRunner, nftRunner as nftPortNFTRunner } from './nftport
         'NFTPort' // https://docs.nftport.xyz/reference/retrieve-nfts-owned-by-account
     ];
 
-
     try {
         const loadTest = false
+
+        // **** uncomment below table for testing
+
         // balanceTable.push(
         //        [balanceApis[0], `${await sequenceRunner({ loadTest: loadTest })}`]
         //     ,  [balanceApis[1], `${await infuraRunner({ loadTest: loadTest })}`]
@@ -39,6 +41,36 @@ import {runner as nftPortRunner, nftRunner as nftPortNFTRunner } from './nftport
         // );
 
         console.log(balanceTable.toString());
+    }catch(e){
+        console.log(e)
+    }
+
+    // instantiate
+    var balanceChangeTable = new Table({
+        head: ['API', 'Time with Relay (ms)', 'Time without Relayer (ms)']
+    , colWidths: [30, 30, 30]
+    });
+
+    // balances
+    const balanceChangeApis = [
+        'Sequence Indexer', // https://docs.sequence.xyz/indexer/fetch-tokens
+        'Infura API', // https://docs.infura.io/infura/tutorials/ethereum/retrieve-the-balance-of-an-erc-20-token
+        'Covalent Balances', // https://www.covalenthq.com/docs/api/balances/get-token-balances-for-address/
+        // 'Chainstack NFT API', // https://chainstack.com/nft-api/
+        'Alchemy', // https://docs.alchemy.com/reference/token-api-quickstart
+        'NFTPort' // https://docs.nftport.xyz/reference/retrieve-nfts-owned-by-account
+    ];
+
+    try {
+        const loadTest = false
+        const res = await changeRunner()
+        balanceChangeTable.push(
+               [balanceChangeApis[0], `${res[0][0]}`, `${res[0][1]}`],
+               [balanceChangeApis[4], `${res[1][0]}`, `${res[1][1]}`],
+               [balanceChangeApis[1], `${res[2][0]}`, `${res[2][1]}`],
+               [balanceChangeApis[3], `${res[3][0]}`, `${res[3][1]}`]
+        );
+        console.log(balanceChangeTable.toString());
     }catch(e){
         console.log(e)
     }
@@ -61,15 +93,18 @@ import {runner as nftPortRunner, nftRunner as nftPortNFTRunner } from './nftport
 
     try {
         const loadTest = false
+
+        // **** uncomment below table for testing
+
         nftTable.push(
             // [nftApis[0], `${await sequenceNFTRunner({ loadTest: loadTest })}`]
-            [nftApis[1], `${await infuraNFTRunner({ loadTest: loadTest })}`]
-          , [nftApis[2], `${await covalentNFTRunner({ loadTest: loadTest })}`]
-          , [nftApis[3], `${await alchemyNFTRunner({ loadTest: loadTest })}`]
-          ,  [nftApis[4], `${await nftPortNFTRunner({ loadTest: loadTest })}`]
+            // [nftApis[1], `${await infuraNFTRunner({ loadTest: loadTest })}`]
+        //   , [nftApis[2], `${await covalentNFTRunner({ loadTest: loadTest })}`]
+        //   , [nftApis[3], `${await alchemyNFTRunner({ loadTest: loadTest })}`]
+        //   ,  [nftApis[4], `${await nftPortNFTRunner({ loadTest: loadTest })}`]
         );
 
-        console.log(nftTable.toString())
+        // console.log(nftTable.toString())
     }catch(e){
         console.log(e)
     }

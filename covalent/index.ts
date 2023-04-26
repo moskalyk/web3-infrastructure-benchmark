@@ -42,7 +42,7 @@ const nftRunner = async (config: any) => {
           
           try{    
             let headers = new Headers();
-            headers.set('Authorization', 'Basic ' + new Buffer('cqt_rQFjvkvxXdm3DGtJTgt8WDmhhwxJ').toString('base64'));
+            headers.set('Authorization', 'Basic ' + new Buffer('cqt_rQJ4DqFJcwvK4chcjrD4qywbQ4gC').toString('base64'));
 
             start()
             await fetch(`https://api.covalenthq.com/v1/polygon/nft/${ADDRESSES[j]}/${`0`}/`, {method: 'GET', headers: headers})

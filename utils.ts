@@ -6,7 +6,6 @@ const start = () => {
 
 const end = () => {
   endTime = new Date();
-  const timeDiff = endTime - startTime; //in ms
   return Math.round(endTime - startTime)
 }
 

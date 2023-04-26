@@ -1126,6 +1126,11 @@
     "@tufjs/canonical-json" "1.0.0"
     minimatch "^7.4.6"
 
+"@types/async@^3.2.20":
+  version "3.2.20"
+  resolved "https://registry.npmjs.org/@types/async/-/async-3.2.20.tgz"
+  integrity sha512-6jSBQQugzyX1aWto0CbvOnmxrU9tMoXfA9gc4IrLEtvr3dTwSg5GLGoWiZnGLI6UG/kqpB3JOQKQrqnhUWGKQA==
+
 "@types/cli-table@^0.3.1":
   version "0.3.1"
   resolved "https://registry.npmjs.org/@types/cli-table/-/cli-table-0.3.1.tgz"
