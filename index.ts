@@ -47,8 +47,8 @@ import { changeRunner } from './update/'
 
     // instantiate
     var balanceChangeTable = new Table({
-        head: ['API', 'Time with Relay (ms)', 'Time without Relayer (ms)']
-    , colWidths: [30, 30, 30]
+        head: ['API', 'Time without Relayer (ms)']
+    , colWidths: [30, 30]
     });
 
     // balances
@@ -65,10 +65,10 @@ import { changeRunner } from './update/'
         const loadTest = false
         const res = await changeRunner()
         balanceChangeTable.push(
-               [balanceChangeApis[0], `${res[0][0]}`, `${res[0][1]}`],
-               [balanceChangeApis[4], `${res[1][0]}`, `${res[1][1]}`],
-               [balanceChangeApis[1], `${res[2][0]}`, `${res[2][1]}`],
-               [balanceChangeApis[3], `${res[3][0]}`, `${res[3][1]}`]
+               [balanceChangeApis[0], `${res[0]}`],
+               [balanceChangeApis[4], `${res[1]}`],
+               [balanceChangeApis[1], `${res[2]}`],
+               [balanceChangeApis[3], `${res[3]}`]
         );
         console.log(balanceChangeTable.toString());
     }catch(e){

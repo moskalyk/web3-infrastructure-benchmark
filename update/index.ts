@@ -1,4 +1,3 @@
-
 import { end, wait } from '../utils'
 import { ethers } from 'ethers'
 import { sequence } from '0xsequence'
@@ -10,6 +9,7 @@ import { SDK, Auth, TEMPLATES, Metadata } from '@infura/sdk';
 import { Alchemy, Network } from "alchemy-sdk";
 
 // configs
+const POLLING_TIME = 300
 
 // sequence
 const provider = new ethers.providers.JsonRpcProvider('https://nodes.sequence.app/polygon')
@@ -44,8 +44,25 @@ const getAddress = async () => {
     return await wallet.getAddress()
 }
 
+const getAverages = (times: any) => {
+
+    const sums: number[] = new Array(times[0].length).fill(0)
+    for(let j = 0; j < times[0].length; j++){
+        for(let i = 0; i < times.length; i++){
+            sums[j] = sums[j] + times[i][j][1]
+        }
+    }
+
+    const averages: number[] = []
+
+    for(let i = 0; i < times[0].length; i++){
+        averages.push(sums[i] / times.length)
+    }
+      
+    return averages
+}
+
 const sequenceListener = async (address: string, balance: number, contractAddress: string) => {
-    // await wait(500)
 
     return new Promise(async (resolve, reject) => {
 
@@ -72,9 +89,33 @@ const sequenceListener = async (address: string, balance: number, contractAddres
                 console.log(e)
             }
 
-            console.log('polling...')
-        }, 200)
+            console.log('polling... sequence')
+        }, POLLING_TIME)
     })
+}
+
+const nftPortPagination = async (contractAddress: string) => {
+    const options = {method: 'GET', headers: {accept: 'application/json', Authorization: process.env!.NFT_PORT_API_KEY!}};
+
+    const balancesPaginated: any = []
+    const res = await fetch(`https://api.nftport.xyz/v0/transactions/nfts/${contractAddress}?chain=polygon`, options)
+    
+    let balances = await res.json()
+    if(!balances!.error)  balancesPaginated.push(...balances.transactions)
+
+    while(balances.continuation){
+        await wait(1100)
+        try{
+            const res = await fetch(`https://api.nftport.xyz/v0/transactions/nfts/${contractAddress}?chain=polygon&continuation=${balances.continuation}`, options)
+            balances = await res.json()
+        }catch(e){
+            console.log('ERROR')
+            console.log(e)
+        }
+        if(!balances!.error) balancesPaginated.push(...balances.transactions)
+    }
+
+    return balancesPaginated
 }
 
 const nftportListener = async (address: string, balance: any, contractAddress: any) => {
@@ -83,12 +124,10 @@ const nftportListener = async (address: string, balance: any, contractAddress: a
 
         let interval = setInterval(async () => {
             try{
-                const options = {method: 'GET', headers: {accept: 'application/json', Authorization: process.env!.NFT_PORT_API_KEY!}};
-
-                const res = await fetch(`https://api.nftport.xyz/v0/transactions/nfts/${contractAddress}?chain=polygon`, options)
-                const balances = await res.json()
+                const balances = await nftPortPagination(contractAddress)
+                // console.log(balances)
                 const balanceMap = new Map()
-                balances.transactions.map((event: any) => {
+                balances.map((event: any) => {
                     if(event.type == 'transfer'){
                         if(!balanceMap.has(event.transfer_to)){
                             balanceMap.set(event.transfer_to, 1)
@@ -101,18 +140,19 @@ const nftportListener = async (address: string, balance: any, contractAddress: a
                     console.log('success')
                     resolve(new Date())
                     clearInterval(interval)
-                }
+                } 
+                // else { resolve(new Date())}
             }catch(e){
                 console.log(e)
             }
 
-            console.log('polling...')
-        }, 200)
+            console.log('polling... nftport')
+        }, POLLING_TIME)
     })
 }
 
 const infuraListener = async (address: string, balance: any, contractAddress: any) => {
-    // await wait(500)
+
     return new Promise(async (resolve, reject) => {
 
         let interval = setInterval(async () => {
@@ -120,7 +160,6 @@ const infuraListener = async (address: string, balance: any, contractAddress: an
                 const res = await sdk.api.getNFTs({
                     publicAddress: address,
                 });
-                // console.log(res)
                 res.assets.map((asset: any) => {
                     if(asset.contract == contractAddress && Number(asset.supply) == balance){
                         console.log('success')
@@ -133,8 +172,8 @@ const infuraListener = async (address: string, balance: any, contractAddress: an
                 console.log(e)
             }
 
-            console.log('polling...')
-        }, 200)
+            console.log('polling... infura')
+        }, POLLING_TIME)
     })
 }
 // grr 401 errors
@@ -165,7 +204,6 @@ const infuraListener = async (address: string, balance: any, contractAddress: an
 // }
 
 const alchemyListener = async (address: string, balance: any, contractAddress: any) => {
-    // await wait(500)
 
     return new Promise(async (resolve, reject) => {
 
@@ -175,7 +213,7 @@ const alchemyListener = async (address: string, balance: any, contractAddress: a
                 const nfts = await alchemy.nft.getNftsForOwner(address);
                 nfts.ownedNfts.map((token: any) => {
                     if(token.contract.address == contractAddress && Number(token.balance) == balance){
-                        console.log('success')
+                        console.log('success alchemy')
                         resolve(new Date())
                         clearInterval(interval)
                     }
@@ -184,8 +222,8 @@ const alchemyListener = async (address: string, balance: any, contractAddress: a
             }catch(e){
                 console.log(e)
             }
-
-        }, 100)
+            console.log('polling... alchemy')
+        }, POLLING_TIME)
     })
 }
 
@@ -283,51 +321,62 @@ const changeRunner = async () => {
 
     let balance: any = 0;
 
-    const tokenBalances = await indexer.getTokenBalances({
-        accountAddress: accountAddress,
-        contractAddress: contractAddress
-    })
-
-    // get balance
-    tokenBalances.balances.map((token) => {
-        if(contractAddress == token.contractAddress){
-            console.log(token.balance, ' vs ', balance)
-            balance = Number(token.balance)
-        } else {
-            console.log('zero balance')
-        }
-    })
-
-    console.log(`starting balance ${balance}`)
-
     // start time
-    const start: any = new Date()
+    const times: any = []
 
-    // send relay update
-    const tx = await executeTx(accountAddress)
+    for(let i = 0; i < 30; i++){
 
-    const mid: any = new Date()
+        const tokenBalances = await indexer.getTokenBalances({
+            accountAddress: accountAddress,
+            contractAddress: contractAddress
+        })
     
-    try{
+        // get balance
+        tokenBalances.balances.map((token) => {
+            if(contractAddress == token.contractAddress){
+                console.log(token.balance, ' vs ', balance)
+                balance = Number(token.balance)
+            } else {
+                console.log('zero balance')
+            }
+        })
+    
+        console.log(`starting balance ${balance}`)
 
-        const [sequenceTime, nftportTime, infuraTime, alchemyTime]: any[] = await Promise.all([
-            sequenceListener(accountAddress, balance+1, contractAddress), 
-            nftportListener(accountAddress, balance, contractAddress),
-            infuraListener(accountAddress, balance, contractAddress),
-            // covalentListener(accountAddress, balance, contractAddress),
-            alchemyListener(accountAddress, balance+1, contractAddress)
-        ]);
+        const start: any = new Date()
 
-        return [
-            [Math.round(sequenceTime - start), Math.round(sequenceTime - mid)], 
-            [Math.round(nftportTime - start), Math.round(nftportTime - mid)],
-            [Math.round(infuraTime - start), Math.round(infuraTime - mid)],
-            [Math.round(alchemyTime - start), Math.round(alchemyTime - mid)]
-        ]
-    }catch(e){
-        console.log(e)
-        return []
+        // send relay update
+        const tx = await executeTx(accountAddress)
+        const mid: any = new Date()
+
+        try{
+
+            const [sequenceTime, nftportTime, infuraTime, alchemyTime]: any[] = await Promise.all([
+                sequenceListener(accountAddress, balance+1, contractAddress), 
+                nftportListener(accountAddress, balance+1, contractAddress),
+                infuraListener(accountAddress, balance+1, contractAddress),
+                // covalentListener(accountAddress, balance, contractAddress),
+                alchemyListener(accountAddress, balance+1, contractAddress)
+            ]);
+
+            times.push([
+                [Math.round(sequenceTime - start), Math.round(sequenceTime - mid)], 
+                [Math.round(nftportTime - start), Math.round(nftportTime - mid)],
+                [Math.round(infuraTime - start), Math.round(infuraTime - mid)],
+                [Math.round(alchemyTime - start), Math.round(alchemyTime - mid)]
+            ])
+
+            await wait(5000)
+        }catch(e){
+            console.log(e)
+            return []
+        }
     }
+
+    const averages = getAverages(times)
+    
+    return averages;
+
 }
 
 export {
