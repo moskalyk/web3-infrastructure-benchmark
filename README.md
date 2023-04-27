@@ -4,11 +4,22 @@
 
 ## methodology
 
-### token balance
+### 1. Token Balance
 - 10 different wallet addresses
 - 10 requests per wallet address
-- >=1 second between requests
+- ~1 second between requests
+- 100 trialed average across apis
 
+### 2. NFT metadata
+- 10 different smart contract address
+- 10 requests per smart contract
+- ~1 second between requests
+- 100 trialed average across apis
+
+### 3. ERC1155 Token Balance "time to update"
+- average over 30 state changes with the sequence relayer
+
+# 1. Token Balance
 Result
 ```
 Token Balance
@@ -27,11 +38,10 @@ Token Balance
 └──────────────────────────────┴──────────────────────────────┘
 ```
 
-## token balance benchmark
+## Graph Comparison: Token Balance Benchmark (ms)
 ![](./benchmark_averages.png)
 
-### NFT metadata
-TBC
+# 2. NFT metadata
 
 ```
 NFT Metadata (one shot requests)
@@ -50,10 +60,10 @@ NFT Metadata (one shot requests)
 └──────────────────────────────┴──────────────────────────────┘
 ```
 
-## metadata benchmark
+## Graph Comparison: NFT Metadata Benchmark (ms)
 ![](./benchmark_nft.png)
 
-### ERC1155 token balance update benchmark
+# 3. ERC1155 Token Balance Time to Update (ms)
 ```
 ┌──────────────────────────────┬──────────────────────────────┐
 │ API                          │ Time without Relayer (ms)    │
@@ -68,5 +78,5 @@ NFT Metadata (one shot requests)
 └──────────────────────────────┴──────────────────────────────┘
 
 ```
-## time to update benchmark
+## Graph Comparison: "Time to Update" Benchmark
 ![](./token_update_nft_1.png)
