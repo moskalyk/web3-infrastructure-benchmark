@@ -98,7 +98,7 @@ TBC
 ```
 
 ## Graph Comparison: Wallet Transaction History Benchmark (ms)
-![](./wallet_tx_history_benchmark.png)
+![](./wallet_tx_history_benchmark_1.png)
 
 # 5. Contract Transaction History
 ```
