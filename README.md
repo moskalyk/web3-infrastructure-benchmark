@@ -60,7 +60,7 @@ TBC
 ## Graph Comparison: NFT Metadata Benchmark (ms)
 ![](./benchmark_nft.png)
 
-# 3. ERC1155 Token Balance Time to Update (ms)
+# 3. ERC1155 Token Balance Time to Update
 ```
 ┌──────────────────────────────┬──────────────────────────────┐
 │ API                          │ Time without Relayer (ms)    │
@@ -75,10 +75,10 @@ TBC
 └──────────────────────────────┴──────────────────────────────┘
 
 ```
-## Graph Comparison: "Time to Update" Benchmark
+## Graph Comparison: "Time to Update" Benchmark (ms)
 ![](./token_update_nft_1.png)
 
-# 4. Wallet Transaction History (ms)
+# 4. Wallet Transaction History
 ```
 ┌──────────────────────────────┬──────────────────────────────┐
 │ API                          │ Time (ms)                    │
@@ -97,10 +97,10 @@ TBC
 └──────────────────────────────┴──────────────────────────────┘
 ```
 
-## Graph Comparison: Wallet Transaction History Benchmark
+## Graph Comparison: Wallet Transaction History Benchmark (ms)
 ![](./wallet_tx_history_benchmark.png)
 
-# 5. Contract Transaction History (ms)
+# 5. Contract Transaction History
 ```
 ┌──────────────────────────────┬──────────────────────────────┐
 │ API                          │ Time (ms)                    │
@@ -117,5 +117,5 @@ TBC
 └──────────────────────────────┴──────────────────────────────┘
 ```
 
-## Graph Comparison: Contract Transaction History Benchmark
+## Graph Comparison: Contract Transaction History Benchmark (ms)
 ![](./contract_tx_history_benchmark.png)
