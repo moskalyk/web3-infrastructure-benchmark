@@ -6,18 +6,30 @@
 
 ### 1. Token Balance
 - 10 different wallet addresses
-- 10 requests per wallet address
+- 10 requests per wallet addresses
 - ~1 second between requests
 - 100 trialed average across apis
 
 ### 2. NFT metadata
-- 10 different smart contract address
+- 10 different smart contract addresses
 - 10 requests per smart contract
 - ~1 second between requests
 - 100 trialed average across apis
 
 ### 3. ERC1155 Token Balance "time to update"
-- average over 30 state changes with the sequence relayer
+- average over 30 state changes post transaction mined using sequence relayer
+
+### 4. Wallet Transaction History
+- 10 different wallet addresses
+- 10 requests per wallet addresses
+- ~1 second between requests
+- 100 trialed average across apis
+
+### 5. Contract Transaction History
+- 10 different smart contract addresses
+- 10 requests per smart contract
+- ~1 second between requests
+- 100 trialed average across apis
 
 # 1. Token Balance
 ```
