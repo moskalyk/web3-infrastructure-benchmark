@@ -57,7 +57,40 @@ const nftRunner = async (config: any) => {
   return average
 }
 
+const walletTxRunner = async (config: any) => {
+  const times: any = []
+  const ADDRESSES = process.env!.NFTS?.split(',')!
+
+  // call api
+  for (let j = 0; j < ADDRESSES.length; j++){
+      for(let i = 0; i < 1; i++){
+          if(config.loadTest == false) await wait(1000)
+          
+          try{    
+              const options = {method: 'GET', headers: {accept: 'application/json', Authorization: process.env!.NFT_PORT_API_KEY!}};
+              start()
+              const res = await fetch(`https://api.nftport.xyz/v0/transactions/accounts/${ADDRESSES[j]}?chain=polygon`, options)
+              console.log(await res.json())
+              times.push(end())
+              // console.log(`${i},${j}`)
+          } catch(e){
+              console.log(e)
+          }
+      }
+  }
+
+
+  const sum = times.reduce((accumulator: any, currentValue: any) => {
+      return accumulator + currentValue;
+    });
+    
+    const average = sum / times.length;
+
+  return average
+}
+
 export {
   runner,
-  nftRunner
+  nftRunner,
+  walletTxRunner
 }

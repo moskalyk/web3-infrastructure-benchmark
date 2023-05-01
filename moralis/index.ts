@@ -1,6 +1,8 @@
 
 import { start, end, wait } from '../utils'
 
+import Moralis from 'moralis';
+
 // Works in both a Webapp (browser) or Node.js:
 import { SequenceIndexerClient } from '@0xsequence/indexer'
 
@@ -20,13 +22,8 @@ const runner = async (config: any) => {
 
             start()
             try{
-                // query Sequence Indexer for all token balances of the account on Polygon
-                const tokenBalances = await indexer.getTokenBalances({
-                    accountAddress: ADDRESSES[j],
-                    // includeMetadata: true
-                })
-                // console.log('tokens in your account:', tokenBalances)
-                times.push(end())
+                // TODO
+            times.push(end())
             } catch(e){}
         }
     }
@@ -45,6 +42,10 @@ const walletTxRunner = async (config: any) => {
     const times: any = []
     const ADDRESSES = process.env!.ADDRESSES?.split(',')!
 
+    await Moralis.start({
+        apiKey: process.env!.MORALIS_API_KEY!
+      });
+
     // call api
     for (let j = 0; j < ADDRESSES.length; j++){
         for(let i = 0; i < 10; i++){
@@ -52,12 +53,14 @@ const walletTxRunner = async (config: any) => {
 
             start()
             try{
-                // query Sequence Indexer for all token balances of the account on Polygon
-                const tokenBalances = await indexer.getTransactionHistory({
-                    filter: {accountAddress: ADDRESSES[j] },
-                    // includeMetadata: true
-                })
-                // console.log('tokens in your account:', tokenBalances)
+                try {
+                    await Moralis.EvmApi.transaction.getWalletTransactions({
+                      "chain": "0x89",
+                      "address": ADDRESSES[j]
+                    });
+                  } catch (e) {
+                    console.error(e);
+                  }
                 times.push(end())
             } catch(e){}
         }
@@ -84,13 +87,7 @@ const nftRunner = async (config: any) => {
             
             try{    
                 start()
-                // query Sequence Indexer for all token balances of the account on Polygon
-                await indexer.getTokenBalances({
-                    accountAddress: ADDRESSES[j],
-                    includeMetadata: true
-                    
-                })
-                // console.log('tokens in your account:', tokenBalances)
+                // TODO
                 times.push(end())
                 console.log(`${i},${j}`)
             } catch(e){
@@ -110,7 +107,7 @@ const nftRunner = async (config: any) => {
 }
 
 export {
-    runner,
-    nftRunner,
+    // runner,
+    // nftRunner,
     walletTxRunner
 }
