@@ -20,9 +20,7 @@
 - average over 30 state changes with the sequence relayer
 
 # 1. Token Balance
-Result
 ```
-Token Balance
 ┌──────────────────────────────┬──────────────────────────────┐
 │ API                          │ Time (ms)                    │
 ├──────────────────────────────┼──────────────────────────────┤
@@ -41,10 +39,9 @@ Token Balance
 ## Graph Comparison: Token Balance Benchmark (ms)
 ![](./benchmark_averages.png)
 
-# 2. NFT metadata
-
+# 2. NFT metadata (one shot requests)
+TBC
 ```
-NFT Metadata (one shot requests)
 ┌──────────────────────────────┬──────────────────────────────┐
 │ API                          │ Time (ms)                    │
 ├──────────────────────────────┼──────────────────────────────┤
@@ -81,7 +78,7 @@ NFT Metadata (one shot requests)
 ## Graph Comparison: "Time to Update" Benchmark
 ![](./token_update_nft_1.png)
 
-# 4. Transaction History (ms)
+# 4. Wallet Transaction History (ms)
 ```
 ┌──────────────────────────────┬──────────────────────────────┐
 │ API                          │ Time (ms)                    │
@@ -100,5 +97,25 @@ NFT Metadata (one shot requests)
 └──────────────────────────────┴──────────────────────────────┘
 ```
 
-## Graph Comparison: Transaction History Benchmark
+## Graph Comparison: Wallet Transaction History Benchmark
 ![](./tx_history_benchmark.png)
+
+# 5. Contract Transaction History (ms)
+```
+┌──────────────────────────────┬──────────────────────────────┐
+│ API                          │ Time (ms)                    │
+├──────────────────────────────┼──────────────────────────────┤
+│ Sequence Indexer             │ 87.5                         │
+├──────────────────────────────┼──────────────────────────────┤
+│ Covalent                     │ 258.35                       │
+├──────────────────────────────┼──────────────────────────────┤
+│ Alchemy                      │ 195.6                        │
+├──────────────────────────────┼──────────────────────────────┤
+│ NFTPort                      │ 325.9                        │
+├──────────────────────────────┼──────────────────────────────┤
+│ Moralis                      │ 471.89                       │
+└──────────────────────────────┴──────────────────────────────┘
+```
+
+## Graph Comparison: Contract Transaction History Benchmark
+![](./contract_tx_history_benchmark.png)
